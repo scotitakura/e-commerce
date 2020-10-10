@@ -14,12 +14,7 @@ Tag.init(
     },
     tag_name: {
       type: DataTypes.STRING,
-      allowNull: false
     },
-    price: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    }
   },
   {
     sequelize,

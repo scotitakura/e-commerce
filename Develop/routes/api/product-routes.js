@@ -3,26 +3,23 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
-// get all products
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+  const data = await
   Product.findAll({
+    attributes: ["product_name"],
     include: [{
       model: Category,
-      through: {
-        attributes: [
-          'id',
-          'category_name',
-        ]
-      }
+      attributes: [
+        'id',
+        'category_name',
+      ]
     },
     {
       model: Tag,
-      through: {
         attributes: [
           'id',
           'tag_name'
         ]
-      }
     }],
     attributes: [
       'id',
@@ -32,47 +29,39 @@ router.get('/', (req, res) => {
       'category_id',
     ]
   })
-  // be sure to include its associated Category and Tag data
+  .catch(err => console.log("error", err));
+  res.json(data);
 });
 
 // get one product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
+  const data = await
   Product.findOne({
+    attributes: ["product_name"],
     include: [{
       model: Category,
-      through: {
-        attributes: [
-          'id',
-          'category_name',
-        ]
-      }
+      attributes: [
+        'id',
+        'category_name',
+      ]
     },
     {
       model: Tag,
-      through: {
-        attributes: [
-          'id',
-          'tag_name'
-        ]
-      }
+      attributes: [
+        'id',
+        'tag_name'
+      ]
     }],
     where: {
       id: req.params.id
     }
   })
-  // be sure to include its associated Category and Tag data
+  .catch(err => console.log("error", err));
+  res.json(data);
 });
 
 // create new product
 router.post('/', (req, res) => {
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -138,7 +127,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  Product.destory({
+  Product.destroy({
     where: {
       id: req.params.id
     }
